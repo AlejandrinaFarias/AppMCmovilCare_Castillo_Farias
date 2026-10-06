@@ -7,22 +7,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.appmcmovilcare_castillo_farias.R
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.appmcmovilcare_castillo_farias.ui.theme.AppMCmovilCare_Castillo_FariasTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
-
     // Estructura de la pantalla con una barra superior.
     Scaffold(
         topBar = {
+            // Barra superior con los colores del tema.
             TopAppBar(
                 title = {
                     Text("MCmovil Care")
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                )
             )
         }
     ) { innerPadding ->
@@ -36,7 +41,6 @@ fun HomeScreen() {
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             // Imagen provisional del proyecto.
             Image(
                 painter = painterResource(
@@ -46,12 +50,22 @@ fun HomeScreen() {
                 modifier = Modifier.size(100.dp)
             )
 
+            // Título de bienvenida centrado.
             Text(
                 text = "Bienvenido a MCmovil Care",
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
 
-            Text("Consulta el estado y cuidado de tus equipos")
+            // Descripción con el estilo y color del tema.
+            Text(
+                text = "Consulta el estado y cuidado de tus equipos",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             // Resumen con datos ficticios.
             Row(
@@ -79,6 +93,7 @@ fun HomeScreen() {
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
