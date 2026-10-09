@@ -51,4 +51,15 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    // Clasifica el tamaño de la ventana para adaptar el diseño.
+    implementation("androidx.compose.material3:material3-window-size-class")
+
+    // Permite navegar entre pantallas.
+    implementation("androidx.navigation:navigation-compose:2.9.7")
+
+    // Permite usar ViewModel desde Compose.
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+
+    // Permite observar el estado respetando el ciclo de vida.
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
 }

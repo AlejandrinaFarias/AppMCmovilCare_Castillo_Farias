@@ -1,100 +1,145 @@
 package com.example.appmcmovilcare_castillo_farias.ui
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.appmcmovilcare_castillo_farias.R
+import com.example.appmcmovilcare_castillo_farias.ui.screens.HomeCompactScreen
+import com.example.appmcmovilcare_castillo_farias.ui.screens.HomeExpandedScreen
+import com.example.appmcmovilcare_castillo_farias.ui.screens.HomeMediumScreen
 import com.example.appmcmovilcare_castillo_farias.ui.theme.AppMCmovilCare_Castillo_FariasTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
-    // Estructura de la pantalla con una barra superior.
-    Scaffold(
-        topBar = {
-            // Barra superior con los colores del tema.
-            TopAppBar(
-                title = {
-                    Text("MCmovil Care")
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+fun HomeScreen(
+    anchoVentana: WindowWidthSizeClass = WindowWidthSizeClass.Compact,
+    onMisEquipos: () -> Unit = {},
+    onSolicitarAtencion: () -> Unit = {}
+) {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    // Menú lateral con los destinos de la aplicación.
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                Text(
+                    text = "MCmovil Care",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(24.dp)
                 )
-            )
+
+                HorizontalDivider()
+
+                NavigationDrawerItem(
+                    label = { Text("Inicio") },
+                    selected = true,
+                    onClick = {
+                        scope.launch {
+                            drawerState.close()
+                        }
+                    },
+                    modifier = Modifier.padding(
+                        horizontal = 12.dp,
+                        vertical = 8.dp
+                    )
+                )
+
+                NavigationDrawerItem(
+                    label = { Text("Mis equipos") },
+                    selected = false,
+                    onClick = {
+                        scope.launch {
+                            drawerState.close()
+                            onMisEquipos()
+                        }
+                    },
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
+
+                NavigationDrawerItem(
+                    label = { Text("Solicitar atención") },
+                    selected = false,
+                    onClick = {
+                        scope.launch {
+                            drawerState.close()
+                            onSolicitarAtencion()
+                        }
+                    },
+                    modifier = Modifier.padding(
+                        horizontal = 12.dp,
+                        vertical = 8.dp
+                    )
+                )
+            }
         }
-    ) { innerPadding ->
-
-        // Ordena los elementos verticalmente.
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Imagen provisional del proyecto.
-            Image(
-                painter = painterResource(
-                    id = R.drawable.ic_launcher_foreground
-                ),
-                contentDescription = "Imagen de la aplicación",
-                modifier = Modifier.size(100.dp)
-            )
-
-            // Título de bienvenida centrado.
-            Text(
-                text = "Bienvenido a MCmovil Care",
-                style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Descripción con el estilo y color del tema.
-            Text(
-                text = "Consulta el estado y cuidado de tus equipos",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Resumen con datos ficticios.
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Text("Equipos: 2")
-                Text("Pendientes: 1")
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text("MCmovil Care")
+                    },
+                    navigationIcon = {
+                        TextButton(
+                            onClick = {
+                                scope.launch {
+                                    drawerState.open()
+                                }
+                            }
+                        ) {
+                            Text(
+                                text = "Menú",
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                )
             }
+        ) { innerPadding ->
+            val modifier = Modifier.padding(innerPadding)
 
-            // Las acciones se implementarán más adelante.
-            Button(
-                onClick = { },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Mis equipos")
-            }
+            // Conserva los tres diseños adaptables de Inicio.
+            when (anchoVentana) {
+                WindowWidthSizeClass.Compact -> {
+                    HomeCompactScreen(
+                        modifier = modifier,
+                        onMisEquipos = onMisEquipos,
+                        onSolicitarAtencion = onSolicitarAtencion
+                    )
+                }
 
-            Button(
-                onClick = { },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Solicitar atención")
+                WindowWidthSizeClass.Medium -> {
+                    HomeMediumScreen(
+                        modifier = modifier,
+                        onMisEquipos = onMisEquipos,
+                        onSolicitarAtencion = onSolicitarAtencion
+                    )
+                }
+
+                else -> {
+                    HomeExpandedScreen(
+                        modifier = modifier,
+                        onMisEquipos = onMisEquipos,
+                        onSolicitarAtencion = onSolicitarAtencion
+                    )
+                }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 360, heightDp = 800)
 @Composable
 fun HomeScreenPreview() {
     AppMCmovilCare_Castillo_FariasTheme {
